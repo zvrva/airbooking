@@ -1,0 +1,15 @@
+docker-compose exec postgres psql -U app -d airbooking
+
+curl -X POST "http://localhost:8080/api/v1/bookings" -H "Content-Type: application/ison" -d '{"flight_id": '4', "seat_number": 5, "email": "test@example.com"}'
+
+curl -X PUT "http://localhost:8080/api/v1/bookings/" -H "Content-Type: application/json"
+
+curl -X DELETE "http://localhost:8080/api/v1/bookings/" -H "Content-Type: application/json"
+
+go test ./internal/service/... -v 
+
+go test ./internal/service/... -cover
+
+Свага:
+/docs/bookings
+/docs/flights

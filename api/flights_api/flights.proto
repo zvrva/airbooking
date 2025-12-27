@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package airbooking.flights_api;
+
+import "google/api/annotations.proto";
+import "models/flight.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/Domenick1991/airbooking/internal/pb/flights_api;flights_api";
+
+service FlightsService {
+  rpc ListFlights(google.protobuf.Empty) returns (ListFlightsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/flights"
+    };
+  }
+
+  rpc GetFlight(GetFlightRequest) returns (GetFlightResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/flights/{id}"
+    };
+  }
+}
+
+message GetFlightRequest {
+  int64 id = 1;
+}
+
+message ListFlightsResponse {
+  repeated airbooking.models.Flight flights = 1;
+}
+
+message GetFlightResponse {
+  airbooking.models.Flight flight = 1;
+}

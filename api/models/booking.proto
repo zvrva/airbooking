@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package airbooking.models;
+
+option go_package = "github.com/Domenick1991/airbooking/internal/pb/models;models";
+
+enum BookingStatus {
+  BOOKING_STATUS_UNSPECIFIED = 0;
+  BOOKING_STATUS_PENDING = 1;
+  BOOKING_STATUS_CONFIRMED = 2;
+  BOOKING_STATUS_CANCELLED = 3;
+  BOOKING_STATUS_EXPIRED = 4;
+}
+
+message Booking {
+  string token = 1;
+  BookingStatus status = 2;
+  string expires_at = 3;
+  int64 flight_id = 4;
+  int32 seat_number = 5;
+  string email = 6;
+}

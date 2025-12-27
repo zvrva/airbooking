@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package airbooking.models;
+
+option go_package = "github.com/Domenick1991/airbooking/internal/pb/models;models";
+
+message Flight {
+  int64 id = 1;
+  string from_airport = 2;
+  string to_airport = 3;
+  string departure_time = 4;
+  string arrival_time = 5;
+  int32 total_seats = 6;
+  int32 available_seats = 7;
+  int64 price_cents = 8;
+}

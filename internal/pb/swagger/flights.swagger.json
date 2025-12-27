@@ -1,0 +1,152 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/flights_api/flights.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/flights": {
+      "get": {
+        "operationId": "FlightsService_ListFlights",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/flights_apiListFlightsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "FlightsService"
+        ]
+      }
+    },
+    "/api/v1/flights/{id}": {
+      "get": {
+        "operationId": "FlightsService_GetFlight",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/flights_apiGetFlightResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "FlightsService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "flights_apiGetFlightResponse": {
+      "type": "object",
+      "properties": {
+        "flight": {
+          "$ref": "#/definitions/modelsFlight"
+        }
+      }
+    },
+    "flights_apiListFlightsResponse": {
+      "type": "object",
+      "properties": {
+        "flights": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/modelsFlight"
+          }
+        }
+      }
+    },
+    "modelsFlight": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "from_airport": {
+          "type": "string"
+        },
+        "to_airport": {
+          "type": "string"
+        },
+        "departure_time": {
+          "type": "string"
+        },
+        "arrival_time": {
+          "type": "string"
+        },
+        "total_seats": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "available_seats": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "price_cents": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

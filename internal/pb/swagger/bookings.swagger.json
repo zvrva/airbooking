@@ -1,0 +1,205 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/bookings_api/bookings.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/bookings": {
+      "post": {
+        "operationId": "BookingsService_CreateBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsBooking"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bookings_apiCreateBookingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BookingsService"
+        ]
+      }
+    },
+    "/api/v1/bookings/{token}": {
+      "delete": {
+        "operationId": "BookingsService_CancelBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsBooking"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BookingsService"
+        ]
+      },
+      "put": {
+        "operationId": "BookingsService_ConfirmBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsBooking"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bookings_apiBookingTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BookingsService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "bookings_apiBookingTokenRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "bookings_apiCreateBookingRequest": {
+      "type": "object",
+      "properties": {
+        "flight_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "seat_number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "modelsBooking": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/modelsBookingStatus"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "flight_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "seat_number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "modelsBookingStatus": {
+      "type": "string",
+      "enum": [
+        "BOOKING_STATUS_UNSPECIFIED",
+        "BOOKING_STATUS_PENDING",
+        "BOOKING_STATUS_CONFIRMED",
+        "BOOKING_STATUS_CANCELLED",
+        "BOOKING_STATUS_EXPIRED"
+      ],
+      "default": "BOOKING_STATUS_UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

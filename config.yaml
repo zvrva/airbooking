@@ -1,0 +1,34 @@
+http:
+  address: ":8080"
+  swagger_dir: "./swagger"
+
+grpc:
+  address: ":50051"
+
+database:
+  host: "postgres"
+  port: 5432
+  user: "app"
+  password: "app"
+  name: "airbooking"
+  ssl_mode: "disable"
+
+redis:
+  addr: "redis:6379"
+  password: ""
+  db: 0
+
+kafka:
+  brokers:
+    - "kafka:9092"
+  booking_topic: "booking-events"
+  notifications_topic: "notifications"
+  group_id: "airbooking-group"
+
+booking:
+  hold_ttl_minutes: 15
+  flights_cache_ttl_seconds: 60
+  confirmation_ttl_minutes: 15
+
+worker:
+  expiration_sweep_minutes: 5

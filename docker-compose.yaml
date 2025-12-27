@@ -1,0 +1,103 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: airbooking
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts:/scripts
+    networks:
+      - airbooking
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "6379:6379"
+    networks:
+      - airbooking
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    environment:
+      - CLUSTER_ID=5L6g3nShT-eMCtK--X86sw
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_LISTENERS=PLAINTEXT_HOST://:9092,PLAINTEXT_DOCKER://:9094,CONTROLLER://:9093
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT_HOST://kafka:9092,PLAINTEXT_DOCKER://kafka:9094
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_DOCKER:PLAINTEXT
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT_DOCKER
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0
+      - KAFKA_LOG_DIRS=/tmp/kraft-combined-logs   
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    networks:
+      - airbooking
+
+  
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=kafka:9094
+      - KAFKA_CLUSTERS_0_NAME=kraft
+      - KAFKA_UI_AUTH_ENABLED=false
+    networks:
+      - airbooking
+
+  app:
+    build: .
+    container_name: airbooking-app
+    volumes: []         
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    networks:
+      - airbooking
+
+  worker:
+    build: .
+    container_name: airbooking-worker
+    command: ["./worker"]
+    volumes: []         
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - airbooking
+
+volumes:
+  postgres_data:
+  redis_data:
+  # kafka_data:
+
+networks:
+  airbooking:
+    name: airbooking
+    driver: bridge
